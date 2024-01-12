@@ -1,5 +1,6 @@
 import React from "react";
 import { IoSearchSharp } from "react-icons/io5";
+import { Link } from "react-router-dom";
 
 function Chats() {
   return (
@@ -24,10 +25,12 @@ function Chats() {
         {[
           1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
         ].map(() => (
-          <div className="chat my-4 flex space-x-3 items-center border-b-2 py-1">
-            <div className="image w-10 h-10 rounded-full bg-slate-400"></div>
-            <h2 className="font-bold text-lg cursor-pointer">Friend's Name</h2>
-          </div>
+          <Link to={"/chat/dadsafs"}>
+            <div className="chat my-4 flex space-x-3 items-center border-b-2 py-1 cursor-pointer">
+              <div className="image w-10 h-10 rounded-full bg-slate-400"></div>
+              <h2 className="font-bold text-lg">Friend's Name</h2>
+            </div>
+          </Link>
         ))}
       </div>
     </div>

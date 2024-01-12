@@ -1,17 +1,19 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AddFriend from "./components/AddFriend";
 import ChatScreen from "./components/ChatScreen";
-import Chats from "./components/Chats";
-import Sidebar from "./components/Sidebar";
+import LoginPage from "./LoginPage";
+import HomeScreen from "./HomeScreen";
 
 function App() {
   return (
-    <div className="App h-screen bg-slate-200 flex gap-2">
-      <Sidebar />
-
-      <main className="basis-4/5 flex">
-        <Chats />
-        <ChatScreen />
-      </main>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomeScreen />} />
+        <Route path="/Login" element={<LoginPage />} />
+        <Route path="/chat/:chat" element={<ChatScreen />} />
+        <Route path="/add-friend" element={<AddFriend />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
