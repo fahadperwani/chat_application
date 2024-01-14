@@ -13,37 +13,6 @@ const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, async (newUser) => {
-      if (newUser) {
-        console.log(newUser);
-        const temp = {
-          name: newUser.displayName,
-          dp: newUser.photoURL,
-          _id: newUser.uid,
-          email: newUser.email,
-        };
-
-        await poster("http://localhost:4000/api/user", temp);
-        // await fetch("http://localhost:4000/api/user", {
-        //   method: "POST",
-        //   body: temp,
-        //   headers: {
-        //     "Content-type": "application/json; charset=UTF-8",
-        //   },
-        // });
-        setUser({
-          name: newUser.displayName,
-          dp: newUser.photoURL,
-          _id: newUser.uid,
-          email: newUser.email,
-        });
-      }
-    });
-
-    return () => unSubscribe();
-  }, []);
-
   const googleSignIn = () => {
     const provider = new GoogleAuthProvider();
     signInWithRedirect(auth, provider);
@@ -59,6 +28,7 @@ export const AuthContextProvider = ({ children }) => {
         googleSignIn,
         signout,
         user,
+        setUser,
       }}
     >
       {children}

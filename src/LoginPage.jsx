@@ -2,9 +2,12 @@ import React, { useEffect } from "react";
 import { FaGoogle } from "react-icons/fa6";
 import { useGoogleAuth } from "./context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebase";
+import { poster } from "./utils";
 
 function LoginPage() {
-  const { user, googleSignIn, googleSignUp } = useGoogleAuth();
+  const { setUser, googleSignIn, googleSignUp } = useGoogleAuth();
   const navigate = useNavigate();
   const handleSignIn = async () => {
     try {
@@ -12,9 +15,29 @@ function LoginPage() {
     } catch (error) {
       console.log(error);
     } finally {
-      navigate("/");
+      // navigate("/");
     }
   };
+
+  useEffect(() => {
+    const unSubscribe = onAuthStateChanged(auth, async (newUser) => {
+      if (newUser) {
+        console.log(newUser);
+        const temp = {
+          name: newUser.displayName,
+          dp: newUser.photoURL,
+          _id: newUser.uid,
+          email: newUser.email,
+        };
+
+        const res = await poster("http://localhost:4000/api/user", temp);
+        const { user } = await res.json();
+        setUser(user);
+        navigate("/");
+      }
+    });
+    return () => unSubscribe();
+  }, []);
 
   return (
     <div className="m-auto py-20 w-fit">
