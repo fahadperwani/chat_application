@@ -5,17 +5,26 @@ import { useGoogleAuth } from "./context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
+import { fetcher } from "./utils";
 
 function HomeScreen({ children }) {
   const navigate = useNavigate();
-  const { setUser } = useGoogleAuth();
-  useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) navigate("/login");
-    });
-  }, []);
+  const { user, setUser } = useGoogleAuth();
+  // useEffect(() => {
+  //   const unSubscribe = onAuthStateChanged(auth, async (newUser) => {
+  //     if (!newUser) navigate("/login");
+  //     else if (!user) {
+  //       const res = await fetcher(
+  //         "http://localhost:4000/api/user/" + newUser.email
+  //       );
+  //       setUser(res.user);
+  //     }
+  //   });
+
+  //   // return () => unSubscribe();
+  // }, []);
   return (
-    <div className="App h-screen bg-slate-200 flex gap-2">
+    <div className="App h-screen w-screen bg-slate-200 flex gap-2">
       <Sidebar />
       <main className="basis-4/5 flex">
         <Chats />

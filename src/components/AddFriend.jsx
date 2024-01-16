@@ -22,7 +22,7 @@ function AddFriend() {
       senderId: user._id,
       recieverId: search.user?._id,
     });
-    poster("http://localhost:4000/api/friend/request", {
+    await poster("http://localhost:4000/api/friend/request", {
       senderId: user._id,
       recieverId: search.user._id,
     });
@@ -30,13 +30,25 @@ function AddFriend() {
     setVal("");
   };
 
-  const handleAccept = async () => {};
+  const handleAccept = async (_id, index) => {
+    console.log(_id);
+    await poster("http://localhost:4000/api/friend/accept", {
+      senderId: _id,
+      recieverId: user._id,
+    });
+    // setUser({
+    //   ...user,
+    //   friends: user?.friends?.push(requests[index]?.senderId),
+    // });
+  };
 
   useEffect(() => {
-    fetcher("http://localhost:4000/api/friend/requests/" + user._id).then(
-      (res) => setRequests(res.requests)
-    );
-  }, []);
+    if (user) {
+      fetcher("http://localhost:4000/api/friend/requests/" + user._id).then(
+        (res) => setRequests(res.requests)
+      );
+    }
+  }, [user]);
   return (
     <HomeScreen>
       <div className="flex-1 bg-white p-4">
@@ -64,7 +76,7 @@ function AddFriend() {
           search.user ? (
             <div className="flex space-x-2 items-center">
               <div className="image w-10 h-10 rounded-full bg-slate-400 overflow-hidden">
-                <img src={search.user.dp} alt="" />
+                <img src={search.user.dp} alt="" referrerpolicy="no-referrer" />
               </div>
               <h2 className="font-bold text-lg mr">{search.user.name}</h2>
               <div className="min-w-36 flex justify-end hover:text-blue-500">
@@ -75,7 +87,7 @@ function AddFriend() {
                   <></>
                 ) : user.requestsSent &&
                   user.requestsSent.includes(search.user._id) ? (
-                  <p className="text-xs text-green-700">Request already sent</p>
+                  <p className="text-xs text-green-700">Request Sent</p>
                 ) : (
                   <IoPersonAddSharp
                     onClick={handleSendRequest}
@@ -94,16 +106,16 @@ function AddFriend() {
         <div className="requests">
           <h2 className="font-bold text-2xl mt-10">Requests</h2>
           {requests.length > 0 ? (
-            requests.map((request) => {
+            requests.map((request, idx) => {
               return (
                 <div className="flex space-x-2 items-center my-5">
                   <div className="image w-10 h-10 rounded-full bg-slate-400 overflow-hidden">
-                    <img src={request.dp} alt="" />
+                    <img src={request.dp} alt="" referrerpolicy="no-referrer" />
                   </div>
                   <h2 className="font-bold text-lg mr">{request.name}</h2>
                   <div className="w-40 flex justify-end ">
                     <button
-                      onClick={handleAccept}
+                      onClick={() => handleAccept(request._id, idx)}
                       className="text-white bg-blue-500 cursor-pointer py-2 px-4 rounded-md active:scale-95 justify"
                     >
                       Accept
