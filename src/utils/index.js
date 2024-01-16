@@ -1,3 +1,10 @@
+import {
+  GoogleAuthProvider,
+  signInWithRedirect,
+  signOut,
+} from "@firebase/auth";
+import { auth } from "../firebase";
+
 export const fetcher = async (url) => {
   try {
     const res = await fetch(url);
@@ -23,4 +30,13 @@ export const poster = async (url, body) => {
     console.log(error);
     alert(error);
   }
+};
+
+export const googleSignIn = async () => {
+  const provider = new GoogleAuthProvider();
+  await signInWithRedirect(auth, provider);
+};
+
+export const signout = async () => {
+  await signOut(auth);
 };

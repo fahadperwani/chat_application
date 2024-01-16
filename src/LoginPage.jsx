@@ -4,10 +4,12 @@ import { useGoogleAuth } from "./context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
-import { poster } from "./utils";
+import { googleSignIn, poster } from "./utils";
+import { useDispatch } from "react-redux";
+import { set_User } from "./store/action";
 
 function LoginPage() {
-  const { setUser, googleSignIn, googleSignUp } = useGoogleAuth();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleSignIn = async () => {
     try {
@@ -32,7 +34,7 @@ function LoginPage() {
 
         const res = await poster("http://localhost:4000/api/user", temp);
         const { user } = await res.json();
-        setUser(user);
+        dispatch(set_User(user));
         navigate("/");
       }
     });

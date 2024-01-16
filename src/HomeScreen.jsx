@@ -9,7 +9,6 @@ import { fetcher } from "./utils";
 
 function HomeScreen({ children }) {
   const navigate = useNavigate();
-  const { user, setUser } = useGoogleAuth();
   // useEffect(() => {
   //   const unSubscribe = onAuthStateChanged(auth, async (newUser) => {
   //     if (!newUser) navigate("/login");

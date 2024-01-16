@@ -3,12 +3,15 @@ import HomeScreen from "../HomeScreen";
 import { IoPersonAddSharp } from "react-icons/io5";
 import { fetcher, poster } from "../utils";
 import { useGoogleAuth } from "../context/AuthContext";
+import { useDispatch, useSelector } from "react-redux";
+import { updateRequests } from "../store/action";
 
 function AddFriend() {
   const [val, setVal] = useState("");
   const [search, setSearch] = useState(null);
-  const { user, setUser } = useGoogleAuth();
+  const user = useSelector((state) => state.user);
   const [requests, setRequests] = useState([]);
+  const dispatch = useDispatch();
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -26,7 +29,7 @@ function AddFriend() {
       senderId: user._id,
       recieverId: search.user._id,
     });
-    setUser({ ...user, requestsSent: [...user.requestsSent, search.user._id] });
+    dispatch(updateRequests([...user.requestsSent, search.user._id]));
     setVal("");
   };
 

@@ -4,9 +4,11 @@ import { useGoogleAuth } from "../context/AuthContext";
 import { FiLogOut } from "react-icons/fi";
 import { signOut } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { signout } from "../utils";
 
 function Sidebar() {
-  const { user, signout } = useGoogleAuth();
+  const user = useSelector((state) => state.user);
   const navigate = useNavigate();
   const handleSignOut = async () => {
     try {

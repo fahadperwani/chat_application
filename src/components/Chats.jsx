@@ -4,10 +4,37 @@ import { Link } from "react-router-dom";
 import { useGoogleAuth } from "../context/AuthContext";
 import { fetcher } from "../utils";
 import { format } from "date-fns";
+import { useSelector } from "react-redux";
 
 function Chats() {
-  const { user } = useGoogleAuth();
+  const user = useSelector((state) => state.user);
   const [chats, setChats] = useState([]);
+  const socket = useSelector((state) => state.socket);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("message-from-server", (message) => {
+        setChats(
+          chats.filter((chat) => {
+            if (chat._id === message.chatId) {
+              chat.lastMessage = message.message;
+            }
+            return chat;
+          })
+        );
+      });
+      socket.on("update-last-message", (message) => {
+        setChats(
+          chats.filter((chat) => {
+            if (chat._id === message.chatId) {
+              chat.lastMessage = message.message;
+            }
+            return chat;
+          })
+        );
+      });
+    }
+  });
 
   useEffect(() => {
     if (user) {
