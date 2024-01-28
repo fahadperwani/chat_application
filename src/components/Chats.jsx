@@ -35,6 +35,8 @@ function Chats({ isLink }) {
         );
       });
       socket.on("request-accepted-from-server", (chat) => {
+        console.log("Chats" + JSON.stringify(chats));
+        console.log("Chat" + JSON.stringify(chat));
         console.log([...chats, chat]);
         console.log(JSON.stringify(chat));
         setChats([...chats, chat]);

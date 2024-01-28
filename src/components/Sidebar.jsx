@@ -34,12 +34,12 @@ function Sidebar() {
         </div>
       </div>
       <div className="options flex space-x-2 xl:mt-8">
-        <Link to={"/add-friend"} relative="path">
+        <Link to={"/add-friend"} className="flex-1" relative="path">
           <div className="option relative flex space-x-2 p-2 border items-center text-gray-500 hover:text-blue-400 xl:shadow-md">
             <IoPersonAddSharp size={25} />
             <div className="text-lg font-bold hidden xl:block">Add Friend</div>
             {notification && (
-              <div className="w-4 h-4 absolute -top-2 right-0 bg-blue-9 rounded-full shadow-xl z-10"></div>
+              <div className="w-4 h-4 absolute -top-2 right-0 bg-blue-900 rounded-full shadow-xl z-10"></div>
             )}
           </div>
         </Link>
