@@ -10,6 +10,7 @@ function Chats({ isLink }) {
   const user = useSelector((state) => state.user);
   const [chats, setChats] = useState([]);
   const socket = useSelector((state) => state.socket);
+  const [typingId, setTypingId] = useState(null);
 
   useEffect(() => {
     console.log("Chats: " + JSON.stringify(chats));
@@ -40,6 +41,12 @@ function Chats({ isLink }) {
         console.log([...chats, chat]);
         console.log(JSON.stringify(chat));
         setChats([...chats, chat]);
+      });
+      socket.on("typing-started-from-server", (chatId) => {
+        setTypingId(chatId);
+      });
+      socket.on("typing-stopped-from-server", (chatId) => {
+        setTypingId(null);
       });
     }
   }, [socket, chats]);
@@ -83,11 +90,11 @@ function Chats({ isLink }) {
               </div>
               <div>
                 <h2 className="font-bold text-lg">{chat.friend.name}</h2>
-                {chat.lastMessage && (
-                  <p className="whitespace-nowrap w-28 text-xs text-gray-500 font-bold truncate">
-                    {chat.lastMessage.content}
-                  </p>
-                )}
+                <p className="whitespace-nowrap w-28 text-xs text-gray-500 font-bold truncate">
+                  {typingId === chat._id
+                    ? "Typing..."
+                    : chat.lastMessage && chat.lastMessage.content}
+                </p>
               </div>
               <div className="text-xs text-gray-400 font-bold ml-auto text-right flex-1">
                 {chat.lastMessage &&

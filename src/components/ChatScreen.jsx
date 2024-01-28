@@ -14,6 +14,27 @@ function ChatScreen() {
   const user = useSelector((state) => state.user);
   const [val, setVal] = useState("");
   const socket = useSelector((state) => state.socket);
+  const [friendTyping, setFriendTyping] = useState(false);
+  const [typing, setTyping] = useState(false);
+  const [timeOut, setTimeOut] = useState(null);
+
+  function timeoutFunction() {
+    setTyping(false);
+    socket.emit("typing-stopped", { chatId, id: state.chat.friend._id });
+  }
+
+  const handleInput = (e) => {
+    setVal(e.target.value);
+    console.log(typing);
+    if (!typing) {
+      setTyping(true);
+      socket.emit("typing", { chatId, id: state.chat.friend._id });
+      setTimeOut(setTimeout(timeoutFunction, 1000));
+    } else {
+      clearTimeout(timeOut);
+      setTimeOut(setTimeout(timeoutFunction, 1000));
+    }
+  };
 
   const handleSend = async (e) => {
     e.preventDefault();
@@ -35,7 +56,8 @@ function ChatScreen() {
 
   useLayoutEffect(() => {
     if (scrollRef?.current) {
-      scrollRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      // scrollRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      scrollRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
 
@@ -45,8 +67,18 @@ function ChatScreen() {
         console.log(messages.length);
         console.log(...messages);
         setMessages([...messages, message]);
+        return () => socket.off("message-from-server");
       });
-      return () => socket.off("message-from-server");
+
+      socket.on("typing-started-from-server/" + chatId, () => {
+        setFriendTyping(true);
+        return () => socket.off("typing-started-from-server/" + chatId);
+      });
+
+      socket.on("typing-stopped-from-server/" + chatId, () => {
+        setFriendTyping(false);
+        return () => socket.off("typing-stopped-from-server/" + chatId);
+      });
     }
   }, [socket, messages]);
 
@@ -71,7 +103,7 @@ function ChatScreen() {
         <div className="chats flex flex-col flex-1 ">
           {messages.map((message, idx) => (
             <div
-              ref={idx === messages.length - 1 ? scrollRef : null}
+              // ref={idx === messages.length - 1 ? scrollRef : null}
               className={`${
                 message.sender === user?._id
                   ? "bg-blue-400 rounded-br-none text-white self-end"
@@ -88,6 +120,8 @@ function ChatScreen() {
               </div>
             </div>
           ))}
+          {friendTyping && <p className="ml-6">Typing....</p>}
+          <div style={{ float: "left", clear: "both" }} ref={scrollRef}></div>
         </div>
         <form
           onSubmit={handleSend}
@@ -99,7 +133,7 @@ function ChatScreen() {
             placeholder="Type Message"
             className="w-1/2 py-2 px-4 border-2 rounded-lg"
             value={val}
-            onChange={(e) => setVal(e.target.value)}
+            onChange={handleInput}
           />
           <button
             type="submit"
