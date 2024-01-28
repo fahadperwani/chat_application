@@ -10,7 +10,7 @@ import { auth } from "./firebase";
 import { fetcher } from "./utils";
 import { Socket, io } from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
-import { setSocket, set_User } from "./store/action";
+import { setNotification, setSocket, set_User } from "./store/action";
 
 function App() {
   const user = useSelector((state) => state.user);
@@ -18,32 +18,31 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (socket) {
-      console.log("Id: " + socket.id);
-      socket.on("hello-from-server", () => {
-        console.log("Hello from server");
-      });
-    }
-  }, [socket]);
-
-  useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, async (newUser) => {
       if (newUser && !user) {
         const res = await fetcher(
           "http://localhost:4000/api/user/" + newUser.email
         );
-        console.log("Res user: " + res.user);
+        console.log("Res : " + JSON.stringify(res));
         dispatch(set_User(res.user));
       }
     });
 
     if (user && !socket) {
-      const socket = io("http://localhost:4000", { query: { id: user._id } });
+      const socket = io("ws://localhost:4000/", { query: { id: user._id } });
       dispatch(setSocket(socket));
-      console.log(Socket);
     }
     // return () => unSubscribe();
   }, [user]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("friend-request-from-server", () => {
+        dispatch(setNotification(true));
+      });
+      return () => socket.off("friend-request-from-server");
+    }
+  }, [socket]);
   return (
     <BrowserRouter>
       <Routes>

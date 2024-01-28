@@ -6,12 +6,13 @@ import { fetcher } from "../utils";
 import { format } from "date-fns";
 import { useSelector } from "react-redux";
 
-function Chats() {
+function Chats({ isLink }) {
   const user = useSelector((state) => state.user);
   const [chats, setChats] = useState([]);
   const socket = useSelector((state) => state.socket);
 
   useEffect(() => {
+    console.log("Chats: " + JSON.stringify(chats));
     if (socket) {
       socket.on("message-from-server", (message) => {
         setChats(
@@ -33,10 +34,16 @@ function Chats() {
           })
         );
       });
+      socket.on("request-accepted-from-server", (chat) => {
+        console.log([...chats, chat]);
+        console.log(JSON.stringify(chat));
+        setChats([...chats, chat]);
+      });
     }
-  });
+  }, [socket, chats]);
 
   useEffect(() => {
+    console.log("Islink: " + isLink);
     if (user) {
       fetcher("http://localhost:4000/api/messages/chats/" + user._id).then(
         (data) => setChats(data)
@@ -44,7 +51,11 @@ function Chats() {
     }
   }, [user]);
   return (
-    <div className=" bg-white basis-1/4 overflow-x-hidden px-5 flex-col flex overflow-auto">
+    <div
+      className={` bg-white  overflow-x-hidden px-5 flex-col lg:flex overflow-auto min-w-[300px] ${
+        isLink ? "sm:hidden" : "sm:flex"
+      }`}
+    >
       <form className="sticky border-b-2 py-4 mb-2 top-0 z-10 bg-white">
         <input
           type="text"

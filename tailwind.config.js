@@ -6,7 +6,11 @@ module.exports = {
       sans: ["Roboto", "sans-serif"],
       serif: ["Merriweather", "serif"],
     },
-    extend: {},
+    extend: {
+      screens: {
+        sm: "200px",
+      },
+    },
   },
   plugins: [],
 };

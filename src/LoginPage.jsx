@@ -24,7 +24,7 @@ function LoginPage() {
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, async (newUser) => {
       if (newUser) {
-        console.log(newUser);
+        console.log("newUser: " + newUser);
         const temp = {
           name: newUser.displayName,
           dp: newUser.photoURL,

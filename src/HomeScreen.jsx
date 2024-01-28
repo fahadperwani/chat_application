@@ -7,7 +7,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
 import { fetcher } from "./utils";
 
-function HomeScreen({ children }) {
+function HomeScreen({ children, isLink = false }) {
   const navigate = useNavigate();
   // useEffect(() => {
   //   const unSubscribe = onAuthStateChanged(auth, async (newUser) => {
@@ -23,10 +23,10 @@ function HomeScreen({ children }) {
   //   // return () => unSubscribe();
   // }, []);
   return (
-    <div className="App h-screen w-screen bg-slate-200 flex gap-2">
+    <div className="App w-full h-screen bg-slate-200 flex gap-2 flex-col xl:flex-row  max-h-screen">
       <Sidebar />
-      <main className="basis-4/5 flex">
-        <Chats />
+      <main className="xl:basis-4/5 h-full flex overflow-hidden">
+        <Chats isLink={isLink} />
         {children}
       </main>
     </div>

@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import HomeScreen from "../HomeScreen";
 import { IoPersonAddSharp } from "react-icons/io5";
 import { fetcher, poster } from "../utils";
-import { useGoogleAuth } from "../context/AuthContext";
 import { useDispatch, useSelector } from "react-redux";
-import { updateRequests } from "../store/action";
+import { setNotification, updateRequests } from "../store/action";
 
 function AddFriend() {
   const [val, setVal] = useState("");
@@ -12,6 +11,8 @@ function AddFriend() {
   const user = useSelector((state) => state.user);
   const [requests, setRequests] = useState([]);
   const dispatch = useDispatch();
+  const notification = useSelector((state) => state.notification);
+  const socket = useSelector((state) => state.socket);
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -29,20 +30,23 @@ function AddFriend() {
       senderId: user._id,
       recieverId: search.user._id,
     });
+    socket.emit("friend-request-sent", {
+      senderId: user._id,
+      recieverId: search.user?._id,
+    });
     dispatch(updateRequests([...user.requestsSent, search.user._id]));
     setVal("");
   };
 
   const handleAccept = async (_id, index) => {
     console.log(_id);
-    await poster("http://localhost:4000/api/friend/accept", {
+    const chat = await poster("http://localhost:4000/api/friend/accept", {
       senderId: _id,
       recieverId: user._id,
     });
-    // setUser({
-    //   ...user,
-    //   friends: user?.friends?.push(requests[index]?.senderId),
-    // });
+    const data = await chat.json();
+    socket.emit("request-accepted", data);
+    setRequests(requests.filter((request) => request._id !== _id));
   };
 
   useEffect(() => {
@@ -52,8 +56,22 @@ function AddFriend() {
       );
     }
   }, [user]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("friend-request-from-server", (user) => {
+        setRequests([...requests, user]);
+      });
+
+      return () => socket.off("friend-request-from-server");
+    }
+  }, [socket]);
+
+  useEffect(() => {
+    if (notification) dispatch(setNotification(false));
+  }, [notification]);
   return (
-    <HomeScreen>
+    <HomeScreen isLink={true}>
       <div className="flex-1 bg-white p-4">
         <h1 className="font-bold text-4xl mt-10">Add Friend</h1>
         <form className="py-8 flex space-x-4">
@@ -64,7 +82,7 @@ function AddFriend() {
             id="add"
             value={val}
             onChange={(e) => setVal(e.target.value)}
-            className="w-[350px] outline-none bg-white text-lg py-2 px-4 rounded-md border-gray-300 hover:border-blue-500 focus:border-blue-500 border-2"
+            className="md:w-[350px]  outline-none bg-white text-lg py-2 px-4 rounded-md border-gray-300 hover:border-blue-500 focus:border-blue-500 border-2"
           />
           <button
             className="bg-blue-500 text-white text-lg py-2 px-4 rounded-md active:scale-95"

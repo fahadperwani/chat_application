@@ -10,6 +10,7 @@ import { signout } from "../utils";
 function Sidebar() {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const notification = useSelector((state) => state.notification);
   const handleSignOut = async () => {
     try {
       await signout();
@@ -20,8 +21,8 @@ function Sidebar() {
   };
 
   return (
-    <div className="bg-white basis-1/5 p-5">
-      <div className="profile flex items-center space-x-2 border-b-2 pb-3">
+    <div className="bg-white xl:basis-1/5 xl:p-5 px-10 py-3 justify-between xl:justify-normal flex w-screen xl:flex-col xl:h-screen h-30">
+      <div className="profile flex items-center space-x-2 xl:border-b-2 xl:pb-3">
         <div className="image w-10 h-10 rounded-full bg-slate-400 overflow-hidden">
           {user && <img src={user.dp} referrerpolicy="no-referrer" />}
         </div>
@@ -32,15 +33,19 @@ function Sidebar() {
           <FiLogOut onClick={handleSignOut} size={20} />
         </div>
       </div>
-      <div className="options mt-8">
-        <div className="option sm:hidden flex space-x-2 p-2 text-gray-500 hover:text-blue-400 hover:border-blue-400 shadow-md mb-5">
-          <IoChatbubblesSharp color="" size={25} />
-          <div className="font-bold  text-lg">Chat</div>
-        </div>
+      <div className="options flex space-x-2 xl:mt-8">
         <Link to={"/add-friend"} relative="path">
-          <div className="option flex space-x-2 p-2 text-gray-500 hover:text-blue-400 hover:border-blue-400 shadow-md mb-5">
+          <div className="option relative flex space-x-2 p-2 border items-center text-gray-500 hover:text-blue-400 xl:shadow-md">
             <IoPersonAddSharp size={25} />
-            <div className="text-lg font-bold">Add Friend</div>
+            <div className="text-lg font-bold hidden xl:block">Add Friend</div>
+            {notification && (
+              <div className="w-4 h-4 absolute -top-2 right-0 bg-blue-9 rounded-full shadow-xl z-10"></div>
+            )}
+          </div>
+        </Link>
+        <Link to={"/"}>
+          <div className="option relative lg:hidden flex space-x-2 p-2 border items-center text-gray-500 hover:text-blue-400 xl:shadow-md">
+            <IoChatbubblesSharp size={25} />
           </div>
         </Link>
       </div>

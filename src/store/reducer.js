@@ -1,8 +1,14 @@
-import { SET_SOCKET, SET_USER, UPDATE_REQUESTS_SENT } from "./action";
+import {
+  SET_NOTIFICATION,
+  SET_SOCKET,
+  SET_USER,
+  UPDATE_REQUESTS_SENT,
+} from "./action";
 
 const globalState = {
   user: null,
   socket: null,
+  notification: false,
 };
 
 export const reducer = (state = globalState, action) => {
@@ -22,6 +28,11 @@ export const reducer = (state = globalState, action) => {
       return {
         ...state,
         socket: action.payload,
+      };
+    case SET_NOTIFICATION:
+      return {
+        ...state,
+        notification: action.payload,
       };
   }
   return state;

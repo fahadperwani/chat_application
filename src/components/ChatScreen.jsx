@@ -36,17 +36,19 @@ function ChatScreen() {
   useLayoutEffect(() => {
     if (scrollRef?.current) {
       scrollRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-      console.log(scrollRef);
     }
   }, [messages]);
 
   useEffect(() => {
     if (socket) {
-      socket.on("message-from-server", (message) => {
-        setMessages([...messages, message.message]);
+      socket.on("message-from-server", ({ message }) => {
+        console.log(messages.length);
+        console.log(...messages);
+        setMessages([...messages, message]);
       });
+      return () => socket.off("message-from-server");
     }
-  }, [socket]);
+  }, [socket, messages]);
 
   useEffect(() => {
     fetcher("http://localhost:4000/api/messages/chat/" + chatId).then(
@@ -56,8 +58,8 @@ function ChatScreen() {
     );
   }, [chatId]);
   return (
-    <HomeScreen>
-      <div className="relative basis-3/4 shadow-xl bg-white flex flex-col overflow-auto">
+    <HomeScreen isLink={true}>
+      <div className="relative basis-3/4 shadow-xl bg-white flex flex-col overflow-auto sm:flex-1">
         <div className="sticky top-0 flex items-center space-x-2 border-b-2 py-2 px-4 shadow-xl bg-white z-10">
           <div className="image w-10 h-10 rounded-full bg-slate-400 overflow-hidden">
             {state.chat && <img src={state.chat.friend.dp} alt="" />}
