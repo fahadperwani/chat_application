@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import Chats from "./components/Chats";
 import Sidebar from "./components/Sidebar";
-import { useGoogleAuth } from "./context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";

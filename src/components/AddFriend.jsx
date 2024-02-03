@@ -16,7 +16,9 @@ function AddFriend() {
 
   const handleClick = async (e) => {
     e.preventDefault();
-    const res = await fetch("http://localhost:4000/api/user/" + val);
+    const res = await fetch(
+      process.env.REACT_APP_BACKEND_URL + "/api/user/" + val
+    );
     const data = await res.json();
     setSearch(data);
   };
@@ -26,7 +28,7 @@ function AddFriend() {
       senderId: user._id,
       recieverId: search.user?._id,
     });
-    await poster("http://localhost:4000/api/friend/request", {
+    await poster(process.env.REACT_APP_BACKEND_URL + "/api/friend/request", {
       senderId: user._id,
       recieverId: search.user._id,
     });
@@ -40,10 +42,13 @@ function AddFriend() {
 
   const handleAccept = async (_id, index) => {
     console.log(_id);
-    const chat = await poster("http://localhost:4000/api/friend/accept", {
-      senderId: _id,
-      recieverId: user._id,
-    });
+    const chat = await poster(
+      process.env.REACT_APP_BACKEND_URL + "/api/friend/accept",
+      {
+        senderId: _id,
+        recieverId: user._id,
+      }
+    );
     const data = await chat.json();
     socket.emit("request-accepted", data);
     setRequests(requests.filter((request) => request._id !== _id));
@@ -51,9 +56,9 @@ function AddFriend() {
 
   useEffect(() => {
     if (user) {
-      fetcher("http://localhost:4000/api/friend/requests/" + user._id).then(
-        (res) => setRequests(res.requests)
-      );
+      fetcher(
+        process.env.REACT_APP_BACKEND_URL + "/api/friend/requests/" + user._id
+      ).then((res) => setRequests(res.requests));
     }
   }, [user]);
 

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { IoSearchSharp } from "react-icons/io5";
 import { Link } from "react-router-dom";
-import { useGoogleAuth } from "../context/AuthContext";
 import { fetcher } from "../utils";
 import { format } from "date-fns";
 import { useSelector } from "react-redux";
@@ -13,7 +12,6 @@ function Chats({ isLink }) {
   const [typingId, setTypingId] = useState(null);
 
   useEffect(() => {
-    console.log("Chats: " + JSON.stringify(chats));
     if (socket) {
       socket.on("message-from-server", (message) => {
         setChats(
@@ -54,9 +52,9 @@ function Chats({ isLink }) {
   useEffect(() => {
     console.log("Islink: " + isLink);
     if (user) {
-      fetcher("http://localhost:4000/api/messages/chats/" + user._id).then(
-        (data) => setChats(data)
-      );
+      fetcher(
+        process.env.REACT_APP_BACKEND_URL + "/api/messages/chats/" + user._id
+      ).then((data) => setChats(data));
     }
   }, [user]);
   return (

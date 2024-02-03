@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { FaGoogle } from "react-icons/fa6";
-import { useGoogleAuth } from "./context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
@@ -32,7 +31,11 @@ function LoginPage() {
           email: newUser.email,
         };
 
-        const res = await poster("http://localhost:4000/api/user", temp);
+        const res = await poster(
+          process.env.REACT_APP_BACKEND_URL + "/api/user",
+          temp
+        );
+        console.log("Response: " + res);
         const { user } = await res.json();
         dispatch(set_User(user));
         navigate("/");

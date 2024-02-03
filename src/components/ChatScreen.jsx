@@ -2,7 +2,6 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import HomeScreen from "../HomeScreen";
 import { fetcher, poster } from "../utils";
 import { useLocation, useParams } from "react-router-dom";
-import { useGoogleAuth } from "../context/AuthContext";
 import { format } from "date-fns";
 import { useSelector } from "react-redux";
 
