@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, HashRouter } from "react-router-dom";
 import AddFriend from "./components/AddFriend";
 import ChatScreen from "./components/ChatScreen";
 import LoginPage from "./LoginPage";
@@ -47,7 +47,7 @@ function App() {
     }
   }, [socket]);
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/Login" element={<LoginPage />} />
         <Route element={<PrivateRoutesLayout />}>
@@ -56,7 +56,7 @@ function App() {
           <Route path="/add-friend" element={<AddFriend />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
