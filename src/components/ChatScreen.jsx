@@ -42,7 +42,10 @@ function ChatScreen() {
       chat: chatId,
       content: val,
     };
-    const res = await poster("http://localhost:4000/api/messages/send", msg);
+    const res = await poster(
+      process.env.REACT_APP_BACKEND_URL + "/api/messages/send",
+      msg
+    );
     const result = await res.json();
     socket.emit("send-message", {
       reciever: state.chat.friend._id,
@@ -82,11 +85,11 @@ function ChatScreen() {
   }, [socket, messages]);
 
   useEffect(() => {
-    fetcher("http://localhost:4000/api/messages/chat/" + chatId).then(
-      (data) => {
-        setMessages(data);
-      }
-    );
+    fetcher(
+      process.env.REACT_APP_BACKEND_URL + "/api/messages/chat/" + chatId
+    ).then((data) => {
+      setMessages(data);
+    });
   }, [chatId]);
   return (
     <HomeScreen isLink={true}>
@@ -97,6 +100,9 @@ function ChatScreen() {
           </div>
           <h2 className="font-bold text-lg">
             {state.chat && state.chat.friend.name}
+            {friendTyping && (
+              <p className="text-xs text-gray-600 font-bold">Typing....</p>
+            )}
           </h2>
         </div>
         <div className="chats flex flex-col flex-1 ">
@@ -119,7 +125,6 @@ function ChatScreen() {
               </div>
             </div>
           ))}
-          {friendTyping && <p className="ml-6">Typing....</p>}
           <div style={{ float: "left", clear: "both" }} ref={scrollRef}></div>
         </div>
         <form

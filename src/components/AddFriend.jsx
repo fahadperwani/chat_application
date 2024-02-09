@@ -86,6 +86,7 @@ function AddFriend() {
             name="add"
             id="add"
             value={val}
+            autoComplete="off"
             onChange={(e) => setVal(e.target.value)}
             className="md:w-[350px]  outline-none bg-white text-lg py-2 px-4 rounded-md border-gray-300 hover:border-blue-500 focus:border-blue-500 border-2"
           />

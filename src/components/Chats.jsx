@@ -10,7 +10,18 @@ function Chats({ isLink }) {
   const [chats, setChats] = useState([]);
   const socket = useSelector((state) => state.socket);
   const [typingId, setTypingId] = useState(null);
+  const [searched, setSearched] = useState(null);
+  const [search, setSearch] = useState();
 
+  const handleSearch = (e) => {
+    if (e.target.value === "") setSearched(chats);
+    setSearched(
+      chats.filter((chat) =>
+        chat.friend.name.toLowerCase().includes(e.target.value.toLowerCase())
+      )
+    );
+    setSearch(e.target.value);
+  };
   useEffect(() => {
     if (socket) {
       socket.on("message-from-server", (message) => {
@@ -34,10 +45,6 @@ function Chats({ isLink }) {
         );
       });
       socket.on("request-accepted-from-server", (chat) => {
-        console.log("Chats" + JSON.stringify(chats));
-        console.log("Chat" + JSON.stringify(chat));
-        console.log([...chats, chat]);
-        console.log(JSON.stringify(chat));
         setChats([...chats, chat]);
       });
       socket.on("typing-started-from-server", (chatId) => {
@@ -57,6 +64,10 @@ function Chats({ isLink }) {
       ).then((data) => setChats(data));
     }
   }, [user]);
+
+  useEffect(() => {
+    setSearched(chats);
+  }, [chats]);
   return (
     <div
       className={` bg-white  overflow-x-hidden px-5 flex-col lg:flex overflow-auto min-w-[300px] ${
@@ -70,6 +81,8 @@ function Chats({ isLink }) {
           id="search"
           placeholder="Search..."
           autoComplete="off"
+          value={search}
+          onChange={handleSearch}
           className="bg-slate-100 rounded-full w-full outline-none text-md shadow-lg py-2 px-4"
         />
         <button
@@ -80,27 +93,28 @@ function Chats({ isLink }) {
         </button>
       </form>
       <div className="chats">
-        {chats.map((chat) => (
-          <Link to={"/chat/" + chat._id} state={{ chat }}>
-            <div className="chat my-4 flex space-x-2 border-b-2 py-1 cursor-pointer">
-              <div className="image w-10 h-10 rounded-full overflow-hidden bg-slate-400">
-                <img src={chat.friend.dp} className="grow-1" alt="" />
+        {searched &&
+          searched.map((chat) => (
+            <Link to={"/chat/" + chat._id} state={{ chat }}>
+              <div className="chat my-4 flex space-x-2 border-b-2 py-1 cursor-pointer">
+                <div className="image w-10 h-10 rounded-full overflow-hidden bg-slate-400">
+                  <img src={chat.friend.dp} className="grow-1" alt="" />
+                </div>
+                <div>
+                  <h2 className="font-bold text-lg">{chat.friend.name}</h2>
+                  <p className="whitespace-nowrap w-28 text-xs text-gray-500 font-bold truncate">
+                    {typingId === chat._id
+                      ? "Typing..."
+                      : chat.lastMessage && chat.lastMessage.content}
+                  </p>
+                </div>
+                <div className="text-xs text-gray-400 font-bold ml-auto text-right flex-1">
+                  {chat.lastMessage &&
+                    format(new Date(chat.lastMessage.createdAt), "hh:mm")}
+                </div>
               </div>
-              <div>
-                <h2 className="font-bold text-lg">{chat.friend.name}</h2>
-                <p className="whitespace-nowrap w-28 text-xs text-gray-500 font-bold truncate">
-                  {typingId === chat._id
-                    ? "Typing..."
-                    : chat.lastMessage && chat.lastMessage.content}
-                </p>
-              </div>
-              <div className="text-xs text-gray-400 font-bold ml-auto text-right flex-1">
-                {chat.lastMessage &&
-                  format(new Date(chat.lastMessage.createdAt), "hh:mm")}
-              </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          ))}
       </div>
     </div>
   );
