@@ -34,6 +34,7 @@ export const reducer = (state = globalState, action) => {
         ...state,
         notification: action.payload,
       };
+    default:
+      return state;
   }
-  return state;
 };

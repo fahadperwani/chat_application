@@ -1,13 +1,13 @@
-import { BrowserRouter, Routes, Route, HashRouter } from "react-router-dom";
+import { Routes, Route, HashRouter } from "react-router-dom";
 import AddFriend from "./components/AddFriend";
 import ChatScreen from "./components/ChatScreen";
 import LoginPage from "./LoginPage";
 import HomeScreen from "./HomeScreen";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
 import { fetcher } from "./utils";
-import { Socket, io } from "socket.io-client";
+import { io } from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotification, setSocket, set_User } from "./store/action";
 import PrivateRoutesLayout from "./layouts/PrivateRoutesLayout";
@@ -18,7 +18,7 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, async (newUser) => {
+    onAuthStateChanged(auth, async (newUser) => {
       if (newUser && !user) {
         const res = await fetcher(
           process.env.REACT_APP_BACKEND_URL + "/api/user/" + newUser.email
@@ -34,7 +34,6 @@ function App() {
       });
       dispatch(setSocket(socket));
     }
-    // return () => unSubscribe();
   }, [user]);
 
   useEffect(() => {

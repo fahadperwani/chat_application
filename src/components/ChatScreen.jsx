@@ -93,15 +93,15 @@ function ChatScreen() {
   }, [chatId]);
   return (
     <HomeScreen isLink={true}>
-      <div className="relative basis-3/4 shadow-xl bg-white flex flex-col overflow-auto sm:flex-1">
-        <div className="sticky top-0 flex items-center space-x-2 border-b-2 py-2 px-4 shadow-xl bg-white z-10">
+      <div className="relative basis-3/4 shadow-xl bg-gray-700 flex flex-col overflow-auto sm:flex-1">
+        <div className="sticky top-0 flex items-center space-x-2 bg-gray-800 border-b-2 py-2 px-4 shadow-xl z-10">
           <div className="image w-10 h-10 rounded-full bg-slate-400 overflow-hidden">
             {state.chat && <img src={state.chat.friend.dp} alt="" />}
           </div>
           <h2 className="font-bold text-lg">
             {state.chat && state.chat.friend.name}
             {friendTyping && (
-              <p className="text-xs text-gray-600 font-bold">Typing....</p>
+              <p className="text-xs text-gray-200 font-bold">Typing....</p>
             )}
           </h2>
         </div>
@@ -111,14 +111,14 @@ function ChatScreen() {
               // ref={idx === messages.length - 1 ? scrollRef : null}
               className={`${
                 message.sender === user?._id
-                  ? "bg-blue-400 rounded-br-none text-white self-end"
-                  : "bg-blue-100 rounded-bl-none"
+                  ? "bg-blue-600 rounded-br-none text-white self-end"
+                  : "bg-blue-950 rounded-bl-none"
               } p-4 pb-6 m-4 max-w-[75%] break-normal rounded-lg relative min-w-20 w-fit`}
             >
               {message.content}
               <div
                 className={`time absolute right-3 bottom-1 opacity-70  text-xs ${
-                  message.sent ? "text-gray-50" : "text-gray-600"
+                  message.sent ? "text-gray-50" : "text-gray-50"
                 }`}
               >
                 {format(new Date(message.createdAt), "hh:mm")}
@@ -129,13 +129,14 @@ function ChatScreen() {
         </div>
         <form
           onSubmit={handleSend}
-          className="sticky bg-white left-0 bottom-0 p-4 flex justify-center items-center w-full space-x-3 shadow-black shadow-2xl"
+          className="sticky left-0 bottom-0 p-4 flex justify-center items-center w-full space-x-3 bg-gray-700 shadow-white shadow-2xl"
         >
           <input
             type="text"
             id="message"
             placeholder="Type Message"
-            className="w-1/2 py-2 px-4 border-2 rounded-lg"
+            autoComplete="off"
+            className="w-1/2 py-2 px-4 border-2 rounded-lg flex-1 outline-none  text-gray-800"
             value={val}
             onChange={handleInput}
           />

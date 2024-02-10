@@ -70,11 +70,11 @@ function Chats({ isLink }) {
   }, [chats]);
   return (
     <div
-      className={` bg-white  overflow-x-hidden px-5 flex-col lg:flex overflow-auto min-w-[300px] ${
+      className={` bg-gray-800  overflow-x-hidden px-5 flex-col lg:flex overflow-auto min-w-[300px] ${
         isLink ? "sm:hidden" : "sm:flex"
       }`}
     >
-      <form className="sticky border-b-2 py-4 mb-2 top-0 z-10 bg-white">
+      <form className="sticky border-b-2 py-4 mb-2 top-0 z-10 bg-gray-800">
         <input
           type="text"
           name="search"
@@ -83,7 +83,7 @@ function Chats({ isLink }) {
           autoComplete="off"
           value={search}
           onChange={handleSearch}
-          className="bg-slate-100 rounded-full w-full outline-none text-md shadow-lg py-2 px-4"
+          className="bg-gray-600 rounded-full w-full outline-none text-md shadow-lg py-2 px-4"
         />
         <button
           type="submit"
