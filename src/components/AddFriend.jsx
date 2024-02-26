@@ -77,7 +77,7 @@ function AddFriend() {
   }, [notification]);
   return (
     <HomeScreen isLink={true}>
-      <div className="flex-1 bg-white p-4">
+      <div className="flex-1 bg-gray-700 p-4">
         <h1 className="font-bold text-4xl mt-10">Add Friend</h1>
         <form className="py-8 flex space-x-4">
           <input
@@ -88,7 +88,7 @@ function AddFriend() {
             value={val}
             autoComplete="off"
             onChange={(e) => setVal(e.target.value)}
-            className="md:w-[350px]  outline-none bg-white text-lg py-2 px-4 rounded-md border-gray-300 hover:border-blue-500 focus:border-blue-500 border-2"
+            className="md:w-[350px]  outline-none bg-white text-black text-lg py-2 px-4 rounded-md border-gray-300 hover:border-blue-500 focus:border-blue-500 border-2"
           />
           <button
             className="bg-blue-500 text-white text-lg py-2 px-4 rounded-md active:scale-95"

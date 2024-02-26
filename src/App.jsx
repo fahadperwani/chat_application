@@ -39,7 +39,6 @@ function App() {
   useEffect(() => {
     if (socket) {
       socket.on("friend-request-from-server", () => {
-        console.log("reeeeeeeeeee");
         dispatch(setNotification(true));
       });
       return () => socket.off("friend-request-from-server");
