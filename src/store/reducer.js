@@ -1,4 +1,5 @@
 import {
+  SET_CHATS,
   SET_NOTIFICATION,
   SET_SOCKET,
   SET_USER,
@@ -9,6 +10,7 @@ const globalState = {
   user: null,
   socket: null,
   notification: false,
+  chats: [],
 };
 
 export const reducer = (state = globalState, action) => {
@@ -33,6 +35,11 @@ export const reducer = (state = globalState, action) => {
       return {
         ...state,
         notification: action.payload,
+      };
+    case SET_CHATS:
+      return {
+        ...state,
+        chats: action.payload,
       };
     default:
       return state;

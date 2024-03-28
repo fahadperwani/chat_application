@@ -16,6 +16,7 @@ function ChatScreen() {
   const [friendTyping, setFriendTyping] = useState(false);
   const [typing, setTyping] = useState(false);
   const [timeOut, setTimeOut] = useState(null);
+  const chats = useSelector((state) => state.chats);
 
   function timeoutFunction() {
     setTyping(false);
@@ -85,11 +86,23 @@ function ChatScreen() {
   }, [socket, messages]);
 
   useEffect(() => {
-    fetcher(
-      process.env.REACT_APP_BACKEND_URL + "/api/messages/chat/" + chatId
-    ).then((data) => {
-      setMessages(data);
+    console.log(chatId);
+    console.log("Chats: " + JSON.stringify(chats));
+    let msgs = [];
+    chats?.forEach((chat) => {
+      if (chat._id == chatId) {
+        console.log("Chat: " + JSON.stringify(chat.messages));
+        msgs = chat.messages;
+        // return chat.messages;
+      }
     });
+    // console.log("Messages: " + JSON.stringify(msgs));
+    setMessages(msgs);
+    // fetcher(
+    //   process.env.REACT_APP_BACKEND_URL + "/api/messages/chat/" + chatId
+    // ).then((data) => {
+    //   setMessages(data);
+    // });
   }, [chatId]);
   return (
     <HomeScreen isLink={true}>
@@ -106,25 +119,28 @@ function ChatScreen() {
           </h2>
         </div>
         <div className="chats flex flex-col flex-1 ">
-          {messages.map((message, idx) => (
-            <div
-              // ref={idx === messages.length - 1 ? scrollRef : null}
-              className={`${
-                message.sender === user?._id
-                  ? "bg-blue-600 rounded-br-none text-white self-end"
-                  : "bg-blue-950 rounded-bl-none"
-              } p-4 pb-6 m-4 max-w-[75%] break-normal rounded-lg relative min-w-20 w-fit`}
-            >
-              {message.content}
+          {messages.map((message, idx) => {
+            console.log("message: " + JSON.stringify(message));
+            return (
               <div
-                className={`time absolute right-3 bottom-1 opacity-70  text-xs ${
-                  message.sent ? "text-gray-50" : "text-gray-50"
-                }`}
+                // ref={idx === messages.length - 1 ? scrollRef : null}
+                className={`${
+                  message.sender === user?._id
+                    ? "bg-blue-600 rounded-br-none text-white self-end"
+                    : "bg-blue-950 rounded-bl-none"
+                } p-4 pb-6 m-4 max-w-[75%] break-normal rounded-lg relative min-w-20 w-fit`}
               >
-                {format(new Date(message.createdAt), "hh:mm")}
+                {message.content}
+                <div
+                  className={`time absolute right-3 bottom-1 opacity-70  text-xs ${
+                    message.sent ? "text-gray-50" : "text-gray-50"
+                  }`}
+                >
+                  {format(new Date(message.createdAt), "hh:mm")}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
           <div style={{ float: "left", clear: "both" }} ref={scrollRef}></div>
         </div>
         <form

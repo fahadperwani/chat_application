@@ -3,11 +3,14 @@ import { IoSearchSharp } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { fetcher } from "../utils";
 import { format } from "date-fns";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setChats } from "../store/action";
 
 function Chats({ isLink }) {
   const user = useSelector((state) => state.user);
-  const [chats, setChats] = useState([]);
+  const dispatch = useDispatch();
+  const chats = useSelector((state) => state.chats);
+  // const [chats, setChats] = useState([]);
   const socket = useSelector((state) => state.socket);
   const [typingId, setTypingId] = useState(null);
   const [searched, setSearched] = useState(null);
@@ -61,7 +64,10 @@ function Chats({ isLink }) {
     if (user) {
       fetcher(
         process.env.REACT_APP_BACKEND_URL + "/api/messages/chats/" + user._id
-      ).then((data) => setChats(data));
+      ).then((data) => {
+        // setChats(data)
+        dispatch(setChats(data));
+      });
     }
   }, [user]);
 
