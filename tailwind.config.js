@@ -10,6 +10,15 @@ module.exports = {
       screens: {
         sm: "200px",
       },
+      animation: {
+        "fade-pulse": "fade-pulse 5s ease infinite",
+      },
+      keyframes: {
+        "fade-pulse": {
+          "0%, 100%": { opacity: 0 },
+          "50%": { opacity: 1 },
+        },
+      },
     },
   },
   plugins: [],

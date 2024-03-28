@@ -3,7 +3,7 @@ import AddFriend from "./components/AddFriend";
 import ChatScreen from "./components/ChatScreen";
 import LoginPage from "./LoginPage";
 import HomeScreen from "./HomeScreen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
 import { fetcher } from "./utils";
@@ -11,10 +11,12 @@ import { io } from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotification, setSocket, set_User } from "./store/action";
 import PrivateRoutesLayout from "./layouts/PrivateRoutesLayout";
+import Loading from "./components/Loading";
 
 function App() {
   const user = useSelector((state) => state.user);
   const socket = useSelector((state) => state.socket);
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -25,6 +27,7 @@ function App() {
         );
         console.log("Res : " + JSON.stringify(res));
         dispatch(set_User(res.user));
+        setLoading(false);
       }
     });
 
@@ -33,6 +36,7 @@ function App() {
         query: { id: user._id },
       });
       dispatch(setSocket(socket));
+      setLoading(false);
     }
   }, [user]);
 
@@ -46,14 +50,18 @@ function App() {
   }, [socket]);
   return (
     <HashRouter>
-      <Routes>
-        <Route path="/Login" element={<LoginPage />} />
-        <Route element={<PrivateRoutesLayout />}>
-          <Route path="/" element={<HomeScreen />} />
-          <Route path="/chat/:chatId" element={<ChatScreen />} />
-          <Route path="/add-friend" element={<AddFriend />} />
-        </Route>
-      </Routes>
+      {loading ? (
+        <Loading />
+      ) : (
+        <Routes>
+          <Route path="/Login" element={<LoginPage />} />
+          <Route element={<PrivateRoutesLayout />}>
+            <Route path="/" element={<HomeScreen />} />
+            <Route path="/chat/:chatId" element={<ChatScreen />} />
+            <Route path="/add-friend" element={<AddFriend />} />
+          </Route>
+        </Routes>
+      )}
     </HashRouter>
   );
 }
