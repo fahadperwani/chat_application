@@ -3,6 +3,7 @@ export const UPDATE_REQUESTS_SENT = "UPDATE_REQUESTS_SENT";
 export const SET_SOCKET = "SET_SOCKET";
 export const SET_NOTIFICATION = "SET_NOTIFICATION";
 export const SET_CHATS = "SET_CHATS";
+export const ADD_CHAT = "ADD_CHAT";
 
 export const set_User = (user) => ({
   type: SET_USER,
@@ -27,4 +28,9 @@ export const setNotification = (notification) => ({
 export const setChats = (chats) => ({
   type: SET_CHATS,
   payload: chats,
+});
+
+export const addChat = (chat) => ({
+  type: ADD_CHAT,
+  payload: chat,
 });
