@@ -27,8 +27,8 @@ function App() {
         );
         console.log("Res : " + JSON.stringify(res));
         dispatch(set_User(res.user));
-        setLoading(false);
       }
+      setLoading(false);
     });
 
     if (user && !socket) {

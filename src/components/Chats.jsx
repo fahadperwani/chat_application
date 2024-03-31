@@ -122,7 +122,7 @@ function Chats({ isLink }) {
                     src={chat.friend.dp}
                     className="grow-1"
                     alt=""
-                    referrerpolicy="no-referrer"
+                    // referrerpolicy="no-referrer"
                   />
                 </div>
                 <div>
